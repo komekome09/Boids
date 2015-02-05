@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="@string/pref_edittext_key"
+        android:title="@string/pref_edittext_title"
+        android:dialogTitle="@string/pref_edittext_dialog"
+        android:summary="@integer/init_num"
+        android:inputType="numberDecimal"/>
+</PreferenceScreen>

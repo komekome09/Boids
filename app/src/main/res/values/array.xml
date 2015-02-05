@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="pref_syncConnectionType_values">
+    <string-array name="pref_syncConnectionType_entries">
         <item>Boids-01</item>
         <item>Boids-02</item>
         <item>Boids-03</item>
-        <item>ちん(笑)</item>
-    </array>
+        <item>Boids-04</item>
+    </string-array>
+    <string-array name="pref_syncConnectionType_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>

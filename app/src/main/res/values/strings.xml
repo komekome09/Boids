@@ -2,6 +2,11 @@
 <resources>
 
     <string name="app_name">Boids</string>
+    <string name="appbar_name">Boids(Dots: %1$d)</string>
     <string name="action_settings">Settings</string>
+
+    <string name="pref_edittext_key">pref_edittext</string>
+    <string name="pref_edittext_title">Number of dots</string>
+    <string name="pref_edittext_dialog">Dots</string>
 
 </resources>

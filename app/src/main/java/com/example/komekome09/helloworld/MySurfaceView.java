@@ -1,6 +1,7 @@
 package com.example.komekome09.helloworld;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -15,6 +16,7 @@ import java.util.Random;
  * SurfaceView for Boids
  */
 public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable{
+    private MainActivity ac;
     private SurfaceHolder mHolder;
     private Thread mLooper;
 
@@ -22,7 +24,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     private int mDisplayWidth;
     private int mDisplayHeight;
-    private int mCircNum = 50;
+    private int mCircNum = getResources().getInteger(R.integer.init_num);
     private double mMaxVelocity = 10;
     private double mCircRad = 3.0;
     private double[] dist = new double[mCircNum * mCircNum];
@@ -78,6 +80,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     public MySurfaceView(Context context){
         super(context);
+        ac = (MainActivity)context;
         getHolder().addCallback(this);
         mDisplayWidth = getWidth();
         mDisplayHeight = getHeight();
@@ -119,6 +122,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             bFirst = false;
         }
         while(mLooper != null){
+            isChanged();
             for (int i = 0; i < mCircNum; i++) {
                 calcDistance();
                 doAvoid(i);
@@ -131,6 +135,19 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             }catch(InterruptedException e){
                 Log.d("MSG", "Interrupted Exception caught.");
             }
+        }
+    }
+
+    void isChanged(){
+        if(ac.getCircNum() != -1 && ac.getCircNum() != mCircNum){
+            mCircNum = ac.getCircNum();
+            final String str = getResources().getString(R.string.appbar_name, mCircNum);
+            ac.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ac.setTitle(str);
+                }
+            });
         }
     }
 
