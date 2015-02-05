@@ -27,6 +27,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     private double mCircRad = 3.0;
     private double[] dist = new double[mCircNum * mCircNum];
     private boolean bFirst = true;
+    private boolean bSurface = false;
 
     public class CircleData{
         private double px;
@@ -47,9 +48,13 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
         void move(int width, int height) {
             if (px < 0 || width < px) {
+                if(px < 0) px = 0;
+                else if(width < px) px = width;
                 vx = -vx;
             }
             if (py < 0 || height < py) {
+                if(py < 0) py = 0;
+                else if(height < py ) py = height;
                 vy = -vy;
             }
 
@@ -81,6 +86,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     // This method called if SurfaceView is Created.
     public void surfaceCreated(SurfaceHolder holder){
         mHolder = holder;
+        bSurface = true;
         mLooper = new Thread(this);
 
     }
@@ -95,6 +101,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     // This method called if SurfaceView is Destroyed.
     public void surfaceDestroyed(SurfaceHolder holder){
         mLooper = null;
+        bSurface = false;
     }
 
     public void run(){
@@ -112,7 +119,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             bFirst = false;
         }
         while(mLooper != null){
-            for(int i = 0; i < mCircNum; i++) {
+            for (int i = 0; i < mCircNum; i++) {
                 calcDistance();
                 doAvoid(i);
                 doApproachGroup(i);
@@ -132,13 +139,15 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         Canvas canvas = mHolder.lockCanvas();
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        canvas.drawColor(Color.WHITE);
-        for(int i = 0; i < mCircNum; i++) {
-            paint.setColor(list.get(i).color);
-            list.get(i).move(mDisplayWidth, mDisplayHeight);
-            canvas.drawCircle((float)list.get(i).px, (float)list.get(i).py, (float)list.get(i).radius, paint);
+        if(bSurface) {
+            canvas.drawColor(Color.WHITE);
+            for (int i = 0; i < mCircNum; i++) {
+                paint.setColor(list.get(i).color);
+                list.get(i).move(mDisplayWidth, mDisplayHeight);
+                canvas.drawCircle((float) list.get(i).px, (float) list.get(i).py, (float) list.get(i).radius, paint);
+            }
+            mHolder.unlockCanvasAndPost(canvas);
         }
-        mHolder.unlockCanvasAndPost(canvas);
     }
 
     // Boids rules 1: Separation
