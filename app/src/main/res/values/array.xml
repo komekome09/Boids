@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="pref_syncConnectionType_values">
+        <item>Boids-01</item>
+        <item>Boids-02</item>
+        <item>Boids-03</item>
+        <item>ちん(笑)</item>
+    </array>
+</resources>
