@@ -1,11 +1,14 @@
 package com.example.komekome09.helloworld;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.widget.Toast;
 
 /**
  * Created by komekome09 on 2015/02/05.
@@ -35,16 +38,24 @@ public class SettingFragment extends PreferenceFragment{
                 }
             };
 
+    // Reflect a value.
     private boolean editTextChange(Preference preference, Object newValue){
         String input = newValue.toString();
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         Activity ac = getActivity();
 
+        // Send input data for MainActivity.
         if(input != null){
             String str = getResources().getString(R.string.app_name, Integer.parseInt(input));
+            int num = Integer.parseInt(input), max = getResources().getInteger(R.integer.max_num);
 
-            bundle.putInt("key.CircNum", Integer.parseInt(input));
+            if(num > max) {
+                Toast.makeText(ac, "Input value is too big!!", Toast.LENGTH_LONG).show();
+                num = max;
+            }
+
+            bundle.putInt("key.CircNum", num);
             intent.putExtras(bundle);
             ac.setResult(Activity.RESULT_OK, intent);
             preference.setSummary(input);

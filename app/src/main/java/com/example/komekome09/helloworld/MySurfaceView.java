@@ -1,7 +1,6 @@
 package com.example.komekome09.helloworld;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -20,16 +19,18 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     private SurfaceHolder mHolder;
     private Thread mLooper;
 
-    private ArrayList<CircleData> list = new ArrayList<>();
-
     private int mDisplayWidth;
     private int mDisplayHeight;
     private int mCircNum = getResources().getInteger(R.integer.init_num);
+    private int mCircPrevNum = 0;
+    private int mMaxCirc = getResources().getInteger(R.integer.max_num);
     private double mMaxVelocity = 10;
     private double mCircRad = 3.0;
-    private double[] dist = new double[mCircNum * mCircNum];
     private boolean bFirst = true;
     private boolean bSurface = false;
+
+    private ArrayList<CircleData> list = new ArrayList<>(mMaxCirc);
+    private ArrayList<Double> dist = new ArrayList<>(mMaxCirc * mMaxCirc);
 
     public class CircleData{
         private double px;
@@ -109,15 +110,9 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     public void run(){
         if(bFirst){
-            Random rand = new Random();
-
-            for(int i = 0; i < mCircNum; i++){
-                list.add(new CircleData(rand.nextInt(mDisplayWidth),
-                        rand.nextInt(mDisplayHeight),
-                        rand.nextDouble() * mMaxVelocity,
-                        rand.nextDouble() * mMaxVelocity,
-                        mCircRad,
-                        Color.RED));
+            makeCircle();
+            for(int i = 0; i < mMaxCirc * mMaxCirc; i++){
+                dist.add(null);
             }
             bFirst = false;
         }
@@ -129,7 +124,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 doApproachGroup(i);
                 doAlignment(i);
                 doDraw();
-            }
+             }
             try {
                 Thread.sleep(5);
             }catch(InterruptedException e){
@@ -138,10 +133,27 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
+    void makeCircle(){
+        Random rand = new Random();
+
+        for(int i = 0; i < mMaxCirc; i++){
+            list.add(new CircleData(rand.nextInt(mDisplayWidth),
+                    rand.nextInt(mDisplayHeight),
+                    rand.nextDouble() * mMaxVelocity,
+                    rand.nextDouble() * mMaxVelocity,
+                    mCircRad,
+                    Color.RED));
+        }
+    }
+
+    // Reflection setting if setting is changed.
     void isChanged(){
         if(ac.getCircNum() != -1 && ac.getCircNum() != mCircNum){
+            mCircPrevNum = mCircNum;
             mCircNum = ac.getCircNum();
             final String str = getResources().getString(R.string.appbar_name, mCircNum);
+
+            // To changed UI method in another thread, you must use handler for inter-thread communication.
             ac.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -175,7 +187,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 double dx = list.get(j).px - list.get(i).px,
                        dy = list.get(j).py - list.get(i).py;
 
-                if (dist[i * mCircNum + j] < 10.0) {
+                if (dist.get(i * mCircNum + j) < 10.0) {
                     list.get(i).vx -= dx;
                     list.get(i).vy -= dy;
                 }
@@ -213,8 +225,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 double dx = list.get(j).px - list.get(i).px,
                        dy = list.get(j).py - list.get(i).py,
                        d = vecLength(dx, dy);
-                dist[i * mCircNum + j] = d;
-                dist[i + j * mCircNum] = d;
+                dist.set(i * mCircNum + j, d);
+                dist.set(i + j * mCircNum, d);
              }
         }
     }
