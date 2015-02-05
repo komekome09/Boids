@@ -176,18 +176,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         list.get(i).vy += dy / 8;
     }
 
-    double vecNormalize(double x, double y, double mag){
-        double vecLength = vecLength(x, y);
-        double scale = mag / vecLength;
-        // divide 0
-        if(scale == Double.NaN || scale == Double.POSITIVE_INFINITY || scale == Double.NEGATIVE_INFINITY){
-            Log.d("", "scale: " + scale);
-            return 1;
-        }
-
-        return scale;
-    }
-
     double vecLength(double x, double y){
         return Math.sqrt(x * x + y * y);
     }
