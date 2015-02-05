@@ -12,17 +12,17 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Created by komekome09 on 2015/02/04.
+ * SurfaceView for Boids
  */
 public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback, Runnable{
     private SurfaceHolder mHolder;
     private Thread mLooper;
 
-    private ArrayList<CircleData> list = new ArrayList<CircleData>();
+    private ArrayList<CircleData> list = new ArrayList<>();
 
     private int mDisplayWidth;
     private int mDisplayHeight;
-    private int mCircNum = 25;
+    private int mCircNum = 50;
     private double mMaxVelocity = 10;
     private double mCircRad = 3.0;
     private double[] dist = new double[mCircNum * mCircNum];
@@ -107,7 +107,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                         rand.nextDouble() * mMaxVelocity,
                         rand.nextDouble() * mMaxVelocity,
                         mCircRad,
-                        (i == 0 ? Color.BLUE : Color.RED)));
+                        Color.RED));
             }
             bFirst = false;
         }
@@ -138,13 +138,6 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
             list.get(i).move(mDisplayWidth, mDisplayHeight);
             canvas.drawCircle((float)list.get(i).px, (float)list.get(i).py, (float)list.get(i).radius, paint);
         }
-        paint.setTextSize(24);
-        paint.setColor(Color.BLACK);
-        canvas.drawText("px: " + list.get(0).px, 100.0f, 100.0f, paint);
-        canvas.drawText("py: " + list.get(0).py, 100.0f, 125.0f, paint);
-        canvas.drawText("vx: " + list.get(0).vx, 100.0f, 150.0f, paint);
-        canvas.drawText("vy: " + list.get(0).vy, 100.0f, 175.0f, paint);
-
         mHolder.unlockCanvasAndPost(canvas);
     }
 
@@ -155,7 +148,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 double dx = list.get(j).px - list.get(i).px,
                        dy = list.get(j).py - list.get(i).py;
 
-                if (dist[i * mCircNum + j] < 5.0) {
+                if (dist[i * mCircNum + j] < 10.0) {
                     list.get(i).vx -= dx;
                     list.get(i).vy -= dy;
                 }
