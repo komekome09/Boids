@@ -139,6 +139,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
         Canvas canvas = mHolder.lockCanvas();
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
+        // Is surface alive? = Canvas is not null?
         if(bSurface) {
             canvas.drawColor(Color.WHITE);
             for (int i = 0; i < mCircNum; i++) {
